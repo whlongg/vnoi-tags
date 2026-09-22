@@ -120,7 +120,19 @@ function start(catalog) {
     }));
     count.textContent = `${result.total.toLocaleString("vi-VN")} bài`;
     status.textContent = result.total ? "" : "Không tìm thấy bài phù hợp.";
-    pagination.replaceChildren(...paginationItems(result.page, result.pages).map((item) => {
+    const previous = document.createElement("button");
+    previous.type = "button";
+    previous.className = "page-arrow";
+    previous.textContent = "←";
+    previous.ariaLabel = "Trang trước";
+    previous.disabled = result.page === 1;
+    previous.addEventListener("click", () => {
+      filters.page -= 1;
+      updateUrl();
+      render();
+      scrollTo(0, 0);
+    });
+    const pageButtons = paginationItems(result.page, result.pages).map((item) => {
       if (item === "…") {
         const span = document.createElement("span");
         span.textContent = item;
@@ -132,7 +144,20 @@ function start(catalog) {
       button.disabled = item === result.page;
       button.addEventListener("click", () => { filters.page = item; updateUrl(); render(); scrollTo(0, 0); });
       return button;
-    }));
+    });
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "page-arrow";
+    next.textContent = "→";
+    next.ariaLabel = "Trang sau";
+    next.disabled = result.page === result.pages;
+    next.addEventListener("click", () => {
+      filters.page += 1;
+      updateUrl();
+      render();
+      scrollTo(0, 0);
+    });
+    pagination.replaceChildren(previous, ...pageButtons, next);
     document.querySelectorAll("[data-tag]").forEach((button) => button.classList.toggle("selected", button.dataset.tag === filters.tag));
     updateUrl();
   }

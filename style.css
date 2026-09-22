@@ -13,14 +13,13 @@
 body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 "Trebuchet MS", sans-serif; }
 a { color: var(--blue); text-decoration: none; }
 a:hover { text-decoration: underline; }
-header { display: flex; justify-content: space-between; align-items: center; padding: 16px max(22px, calc((100vw - 1440px) / 2)); border-bottom: 1px solid var(--line); background: #18201c; }
-.brand { color: var(--text); font: 700 20px Georgia, serif; letter-spacing: .03em; }
-.brand span { color: var(--green); }
-main { max-width: 1440px; margin: auto; padding: 28px 22px 60px; }
-.title-row { display: flex; align-items: end; justify-content: space-between; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
-.eyebrow { margin: 0; color: var(--green); text-transform: uppercase; font-size: 11px; letter-spacing: .16em; }
-h1 { margin: 3px 0 10px; font: 400 clamp(28px, 4vw, 42px) Georgia, serif; }
-.title-row output { padding-bottom: 12px; color: var(--muted); }
+header { display: flex; justify-content: space-between; align-items: center; padding: 10px max(22px, calc((100vw - 1440px) / 2)); border-bottom: 1px solid var(--line); background: #18201c; }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); font: 700 21px Georgia, serif; letter-spacing: .02em; }
+.brand:hover { text-decoration: none; }
+.brand img { width: 38px; height: 38px; }
+.download { color: #07130c; background: var(--green); border-radius: 3px; padding: 8px 12px; font-weight: 700; }
+.download:hover { text-decoration: none; filter: brightness(1.12); }
+main { max-width: 1440px; margin: auto; padding: 18px 22px 60px; }
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; align-items: start; }
 aside { display: grid; gap: 14px; position: sticky; top: 12px; }
 form, details { background: var(--panel); border: 1px solid var(--line); }
@@ -35,9 +34,12 @@ button { color: #07130c; background: var(--green); border: 0; border-radius: 3px
 button:hover { filter: brightness(1.12); }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid #f3cf64; outline-offset: 2px; }
 button.quiet { color: var(--text); background: #344139; }
-.pagination { min-height: 35px; display: flex; gap: 4px; margin-bottom: 8px; align-items: center; }
+.catalog-bar { min-height: 35px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.catalog-bar output { color: var(--muted); white-space: nowrap; }
+.pagination { display: flex; gap: 4px; align-items: center; }
 .pagination button, .pagination span { min-width: 34px; text-align: center; }
 .pagination button:disabled { color: white; background: #177f4e; cursor: default; }
+.pagination .page-arrow:disabled { color: var(--muted); background: #26312b; }
 .table-wrap { overflow-x: auto; border: 1px solid var(--line); }
 table { width: 100%; border-collapse: collapse; min-width: 650px; }
 th { color: #0e1511; background: #d3d7d4; text-align: left; }
@@ -53,10 +55,13 @@ summary { padding: 9px 11px; background: #d3d7d4; color: #101512; cursor: pointe
 .tag-list button { padding: 5px 7px; color: var(--blue); background: transparent; text-align: left; }
 .tag-list button.selected { color: white; background: #176d48; }
 #status { color: #f3cf64; }
-footer { padding: 18px 22px; border-top: 1px solid var(--line); text-align: center; color: var(--muted); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 @media (max-width: 850px) {
   .layout { grid-template-columns: 1fr; }
   aside { grid-row: 1; position: static; }
   .row-tags { display: block; float: none; max-width: none; margin: 3px 0 0; text-align: left; }
+}
+@media (max-width: 520px) {
+  .catalog-bar { align-items: flex-start; flex-direction: column-reverse; }
+  .pagination { max-width: 100%; overflow-x: auto; padding-bottom: 3px; }
 }
