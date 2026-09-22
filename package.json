@@ -1,0 +1,9 @@
+{
+  "name": "vnoi-tags",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test && PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_*.py'",
+    "check": "node --check app.js && npm test"
+  }
+}
