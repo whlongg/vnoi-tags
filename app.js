@@ -1,6 +1,40 @@
 const PAGE_SIZE = 50;
+const GROUP_NAMES = {
+  graph_theory: "Lý thuyết Đồ thị",
+  data_structure: "Cấu trúc dữ liệu",
+  string: "Xử lý xâu",
+  dp: "Quy Hoạch Động",
+  other: "Kĩ năng khác",
+  geometry: "Hình học",
+  math: "Toán học",
+  flow: "Luồng & Cặp ghép",
+  greedy: "Tham lam",
+  game_theory: "Lý thuyết trò chơi",
+  brute_force: "Duyệt",
+  sqrt: "Chia căn (Sqrt Decomposition)",
+};
 
 const fold = (value = "") => value.normalize("NFC").toLocaleLowerCase("vi");
+
+export function normalizeCatalog(data) {
+  const groups = Object.entries(GROUP_NAMES).map(([code, name]) => ({ code, name, tags: [] }));
+  const groupByCode = new Map(groups.map((group) => [group.code, group]));
+  const seenTags = new Set();
+  const problems = Object.entries(data).map(([code, problem]) => {
+    const tags = problem.tags.map((tag) => {
+      const group = groupByCode.get(tag.group);
+      if (!group) throw new Error(`Unknown tag group: ${tag.group}`);
+      if (!seenTags.has(tag.code)) {
+        group.tags.push({ code: tag.code, name: tag.name });
+        seenTags.add(tag.code);
+      }
+      return tag.code;
+    });
+    return { code, name: problem.name, url: problem.link, judge: problem.judge, tags };
+  });
+  groups.forEach((group) => group.tags.sort((a, b) => a.name.localeCompare(b.name, "vi")));
+  return { groups, problems };
+}
 
 export function normalizeFilters(params) {
   const page = Number.parseInt(params.get("page") || "1", 10);
@@ -187,6 +221,7 @@ if (typeof document !== "undefined") {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.json();
     })
+    .then(normalizeCatalog)
     .then(start)
     .catch(() => {
       document.querySelector("#status").textContent = "Không tải được dữ liệu. Vui lòng thử lại sau.";

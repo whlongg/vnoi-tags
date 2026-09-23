@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { filterProblems, getPage, normalizeFilters, pickRandom } from "../app.js";
+import { filterProblems, getPage, normalizeCatalog, normalizeFilters, pickRandom } from "../app.js";
 
 const problems = [
   { code: "AC_1", name: "Đường đi ngắn nhất", judge: "Atcoder", tags: ["graph", "dijkstra"] },
@@ -40,4 +41,17 @@ test("paginates and clamps invalid pages", () => {
 test("random selection stays inside the filtered collection", () => {
   assert.equal(pickRandom([problems[1]], () => 0.99), problems[1]);
   assert.equal(pickRandom([], () => 0), null);
+});
+
+test("loads the keyed JSON catalog without losing problems or tags", () => {
+  const data = JSON.parse(readFileSync(new URL("../data.json", import.meta.url), "utf8"));
+  const catalog = normalizeCatalog(data);
+  assert.equal(catalog.problems.length, 2141);
+  assert.equal(catalog.groups.length, 12);
+  assert.equal(catalog.groups.flatMap(({ tags }) => tags).length, 128);
+  assert.equal(catalog.groups[0].name, "Lý thuyết Đồ thị");
+  assert.equal(catalog.problems[0].code, "AC_abc134_e");
+  assert.equal(catalog.problems[0].url, data.AC_abc134_e.link);
+  assert.deepEqual(catalog.problems[0].tags, ["constructive", "greedy"]);
+  assert.deepEqual(filterProblems(catalog.problems, { tag: "greedy" })[0].code, "AC_abc134_e");
 });
